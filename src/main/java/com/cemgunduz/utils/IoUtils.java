@@ -1,7 +1,6 @@
 package com.cemgunduz.utils;
 
 import com.sun.deploy.util.StringUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,12 +14,17 @@ public class IoUtils {
 
     public static List<List<String>> mapFileToStringList(String path) {
 
-        List<String> lines = null;
+        List<String> lines = new ArrayList<String>();
+
         try{
 
-            FileInputStream inputStream = new FileInputStream(path);
-            lines = IOUtils.readLines(inputStream);
-            inputStream.close();
+            BufferedReader br = new BufferedReader(new FileReader(path));
+
+            String sCurrentLine;
+            while ((sCurrentLine = br.readLine()) != null)
+                lines.add(sCurrentLine);
+
+            br.close();
         }
         catch (Exception e)
         {
@@ -36,36 +40,5 @@ public class IoUtils {
         }
 
         return stringListByLine;
-    }
-
-    public static void mapStringListToFile(List<String> stringList)
-    {
-        mapStringListToFile(stringList, "output.txt");
-    }
-
-    public static void mapStringListToFile(List<String> stringList, String filename)
-    {
-        OutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        for(String line : stringList)
-        {
-            try {
-                line += "\n";
-                IOUtils.write(line, outputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
